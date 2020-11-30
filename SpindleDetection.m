@@ -56,7 +56,7 @@ TP = 0; FP = 0; FN = 0;
 nLearn = 3;
 
 % Initialization
-fs = 256;
+fs = 256; % ATTENTION: if your input signal is not sampled at 256 Hz, you need to resample it at 256 Hz. 
 h_s = fir_kaiser(10.5,  11, 16, 16.5, fs);   % spindle filter
 
 %% First stage: pre-detection
