@@ -19,8 +19,6 @@ PatientID = 1 : 15;                % E2  % Merged
 total_length = [7413248,8965120,9411584,7998976,7421952,7245824,...
     7638016,6638592,6511616,8072704,9312256,7213568,7256064,7566336,6756864];
 
-
-
 num_subject = length(PatientID);
 num_features = 7;
 lb = 8;% position of spindle labels
@@ -41,21 +39,15 @@ pr_event = zeros(num_subject,1);
 f1_event = zeros(num_subject,1);
 eval = cell(num_subject,1);
 
-
 % The duration of the detection window must exceeds tmin but cannot be longer than tmax.
 tmax = 3.0;
 tmin = 0.3;
 tgap = 0.15; % detection windows with time gap less than tgap are merged.
 
-
 cm_det = zeros(2, 2);
 cm_ml = zeros(2, 2);
-
 TP = 0; FP = 0; FN = 0;
-      
 nLearn = 3;
-
-% Initialization
 fs = 256; % ATTENTION: if your input signal is not sampled at 256 Hz, you need to resample it at 256 Hz. 
 h_s = fir_kaiser(10.5,  11, 16, 16.5, fs);   % spindle filter
 
