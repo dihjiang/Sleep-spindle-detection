@@ -4,7 +4,8 @@ Jiang, D., Ma, Y., & Wang, Y. (2021). A robust two-stage sleep spindle detection
 
 # Description
 ## main function
-SpindleDetection.m is the main function for detecting spindles.
+SpindleDetection.m is the main function for detecting spindles.  
+
 (It can be easily adapted under different settings, e.g. different datasets, different ground truth).
 
 ## Data preparation (how data and annotations are stored and loaded)
