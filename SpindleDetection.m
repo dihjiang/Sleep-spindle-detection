@@ -1,12 +1,11 @@
 clear;clc
 
-load MASS_SS2_C3_N2Union
+load MASS_SS2_C3_N2Union % The data and annotation file. See Readme.md for how to generate this file.
 load train_val_test_split_E2
-
 
 tic
 
-% Initialization
+%% Initialization
 
 % % for E1
 % PatientID = [1:3 5:7 9:14 17:19]; 
@@ -44,12 +43,12 @@ tmax = 3.0;
 tmin = 0.3;
 tgap = 0.15; % detection windows with time gap less than tgap are merged.
 
-cm_det = zeros(2, 2);
+cm_det = zeros(2, 2); % confusion_matrix
 cm_ml = zeros(2, 2);
 TP = 0; FP = 0; FN = 0;
 nLearn = 3;
 fs = 256; % ATTENTION: if your input signal is not sampled at 256 Hz, you need to resample it at 256 Hz. 
-h_s = fir_kaiser(10.5,  11, 16, 16.5, fs);   % spindle filter
+h_s = fir_kaiser(10.5,  11, 16, 16.5, fs);   % sigma-band filter
 
 %% First stage: pre-detection
 for i = PatientID
@@ -57,11 +56,8 @@ for i = PatientID
     eeg = eeg_N2{i}(:,1);     % N2 EEG
     spindle = eeg_N2{i}(:,2); % ground truth
 
-    
     % scaling factors. Fine tuning on the first subject
     sf_range = (max(eeg)-min(eeg))/(265*2); % scaling factor for range
-
-    
     
     anomaly_eeg_th = 200*sf_range; % Threshold for anomaly
     anomaly_cali_th = 50*sf_range; % Threshold for calibrating anomaly
@@ -88,11 +84,10 @@ for i = PatientID
     begin_det = find(diff([0;detvec])==1);
     stop_det = find(diff([detvec;0])==-1);   
     
-    % Feature extraction
+    % Feature extraction of predetected spindle candidates
     for j = 1 : length(begin_det)
         eeg_candidate = eeg_s(begin_det(j):stop_det(j));
         spindle_candidate = spindle(begin_det(j):stop_det(j));
-
 
         features{i}(j,1) = rms(eeg_candidate); % Root-mean-square
         features{i}(j,2) = RenyiEntropy(eeg_candidate');
@@ -114,7 +109,7 @@ for i = PatientID
         features{i}(j,9:10) = [begin_det(j) stop_det(j)]; 
     end       
     
-    % feature normalization
+    % feature normalization (works better for whole dataset, if you work on a small dataset then commenting out the following three lines)
     f = features{i}(:,1:7);
     f = mapminmax(f'); % mapped to [-1,1]
     features{i}(:,1:7) = f';
